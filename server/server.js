@@ -22,8 +22,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
 const user = require("./routes/UserRoute");
+const post = require("./routes/PostRoute");
 
 app.use("/api", user);
+app.use("/api", post);
 
 app.listen(port, () => {
   console.log("Server is running on port", port);

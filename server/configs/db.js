@@ -16,7 +16,12 @@ function initialize() {
 
   // init models and add them to the exported db object
   db.users = require("../models/UserModel")(sequelize);
-
+  db.posts = require("../models/PostModel")(sequelize);
+  
+  // relationship
+  db.posts.belongsTo(db.users);
+  db.users.hasMany(db.posts, { foreignKey: "userId" });
+  
   // sync all models with database
   sequelize.sync({ alter: true });
 }
