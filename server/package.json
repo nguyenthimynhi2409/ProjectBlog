@@ -1,9 +1,13 @@
 {
   "name": "ProjectBlog",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "author": "suri",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
@@ -14,6 +18,7 @@
     "express": "^4.18.1",
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.3",
     "nodemon": "^2.0.16",
     "sequelize": "^6.20.1",
     "validator": "^13.7.0"
