@@ -17,11 +17,20 @@ function initialize() {
   // init models and add them to the exported db object
   db.users = require("../models/UserModel")(sequelize);
   db.posts = require("../models/PostModel")(sequelize);
+  db.comments = require("../models/CommentModel")(sequelize);
   
   // relationship
   db.posts.belongsTo(db.users);
   db.users.hasMany(db.posts, { foreignKey: "userId" });
-  
+
+  db.comments.belongsTo(db.posts);
+  db.posts.hasMany(db.comments, { foreignKey: "postId" });
+  db.comments.belongsTo(db.users);
+  db.users.hasMany(db.comments, { foreignKey: "userId" });
+  db.comments.belongsTo(db.comments, { as: 'parent', foreignKey: 'commentId' });
+  db.comments.hasMany(db.comments, { as: 'children', foreignKey: 'commentId' });
+
+
   // sync all models with database
   sequelize.sync({ alter: true });
 }
