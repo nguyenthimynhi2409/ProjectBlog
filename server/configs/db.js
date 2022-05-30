@@ -18,6 +18,7 @@ function initialize() {
   db.users = require("../models/UserModel")(sequelize);
   db.posts = require("../models/PostModel")(sequelize);
   db.comments = require("../models/CommentModel")(sequelize);
+  db.ratings = require("../models/RatingModel")(sequelize);
   
   // relationship
   db.posts.belongsTo(db.users);
@@ -30,6 +31,10 @@ function initialize() {
   db.comments.belongsTo(db.comments, { as: 'parent', foreignKey: 'commentId' });
   db.comments.hasMany(db.comments, { as: 'children', foreignKey: 'commentId' });
 
+  db.ratings.belongsTo(db.posts);
+  db.posts.hasMany(db.ratings, { foreignKey: "postId" });
+  db.ratings.belongsTo(db.users);
+  db.users.hasMany(db.ratings, { foreignKey: "userId" });
 
   // sync all models with database
   sequelize.sync({ alter: true });

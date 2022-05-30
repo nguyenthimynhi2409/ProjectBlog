@@ -24,10 +24,12 @@ app.use(fileUpload());
 const user = require("./routes/UserRoute");
 const post = require("./routes/PostRoute");
 const comment = require("./routes/CommentRoute");
+const rating = require("./routes/RatingRoute");
 
 app.use("/api", user);
 app.use("/api", post);
 app.use("/api", comment);
+app.use("/api", rating);
 
 app.listen(port, () => {
   console.log("Server is running on port", port);
