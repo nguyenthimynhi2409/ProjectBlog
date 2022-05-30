@@ -19,6 +19,7 @@ function initialize() {
   db.posts = require("../models/PostModel")(sequelize);
   db.comments = require("../models/CommentModel")(sequelize);
   db.ratings = require("../models/RatingModel")(sequelize);
+  db.bookmarks = require("../models/BookmarkModel")(sequelize);
   
   // relationship
   db.posts.belongsTo(db.users);
@@ -35,6 +36,11 @@ function initialize() {
   db.posts.hasMany(db.ratings, { foreignKey: "postId" });
   db.ratings.belongsTo(db.users);
   db.users.hasMany(db.ratings, { foreignKey: "userId" });
+
+  db.bookmarks.belongsTo(db.posts);
+  db.posts.hasMany(db.bookmarks, { foreignKey: "postId" });
+  db.bookmarks.belongsTo(db.users);
+  db.users.hasMany(db.bookmarks, { foreignKey: "userId" });
 
   // sync all models with database
   sequelize.sync({ alter: true });

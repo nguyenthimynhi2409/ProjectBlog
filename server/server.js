@@ -25,11 +25,13 @@ const user = require("./routes/UserRoute");
 const post = require("./routes/PostRoute");
 const comment = require("./routes/CommentRoute");
 const rating = require("./routes/RatingRoute");
+const bookmark = require("./routes/BookmarkRoute");
 
 app.use("/api", user);
 app.use("/api", post);
 app.use("/api", comment);
 app.use("/api", rating);
+app.use("/api", bookmark);
 
 app.listen(port, () => {
   console.log("Server is running on port", port);
