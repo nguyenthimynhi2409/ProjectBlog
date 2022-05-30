@@ -1,10 +1,19 @@
 const db = require("../configs/db");
-const { getUserById } = require("../services/UserService");
 
 async function getAll() {
   return await db.posts.findAll({
     include: {
-      model: db.users
+      model: db.users,
+    },
+  });
+}
+
+// Get all posts by userId
+async function getAllPostsByUser(id) {
+  return await db.posts.findAll({
+    where: { userId: id },
+    include: {
+      model: db.users,
     },
   });
 }
@@ -21,7 +30,7 @@ async function create(params) {
 }
 
 async function update(id, params) {
-  const post = await getPost(id);
+  const post = await getUser(id);
 
   // copy params to post and save
   Object.assign(post, params);
@@ -35,7 +44,11 @@ async function _delete(id) {
 }
 
 async function getPost(id) {
-  const post = await db.posts.findByPk(id);
+  const post = await db.posts.findByPk(id,{
+    include: {
+      model: db.users,
+    },
+  });
   if (!post) throw "Post not found";
   return post;
 }
@@ -46,4 +59,5 @@ module.exports = {
   create,
   update,
   delete: _delete,
+  getAllPostsByUser
 };

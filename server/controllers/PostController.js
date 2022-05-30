@@ -8,6 +8,14 @@ exports.getAllPosts = (req, res, next) => {
     .catch(next);
 };
 
+// Get all post by userId
+exports.getAllPostsByUser = (req, res, next) => {
+  postService
+    .getAllPostsByUser(req.params.id)
+    .then((posts) => responseData(res, 200, { posts, total: posts.length }))
+    .catch(next);
+};
+
 exports.getPost = (req, res, next) => {
   postService
     .getById(req.params.id)
