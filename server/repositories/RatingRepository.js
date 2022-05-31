@@ -1,28 +1,28 @@
 const db = require("../configs/db");
 
-async function getAll() {
+async function getAllRatings() {
   return await db.ratings.findAll();
 }
 
 // Get rating of the post by postId
-async function getByPostId(id) {
+async function getRatingByPostId(id) {
   const ratings = await db.ratings.findAll({ where: { postId: id } });
   let sum = 0;
   ratings.map((rating) => {
     sum += rating.rate;
-    return sum/(ratings.length);
+    return sum / ratings.length;
   });
   return sum;
 }
 
 // Rate a post
-async function create(params) {
+async function createRating(params) {
   const rating = new db.ratings(params);
   await rating.save();
   return rating;
 }
 
-async function update(id, params) {
+async function updateRating(id, params) {
   const rating = await getRating(id);
 
   // copy params to post and save
@@ -31,7 +31,7 @@ async function update(id, params) {
   return rating;
 }
 
-async function _delete(id) {
+async function deleteRating(id) {
   const rating = await getRating(id);
   await rating.destroy();
 }
@@ -43,9 +43,9 @@ async function getRating(id) {
 }
 
 module.exports = {
-  getAll,
-  getByPostId,
-  create,
-  update,
-  delete: _delete,
+  getAllRatings,
+  getRatingByPostId,
+  createRating,
+  updateRating,
+  deleteRating,
 };

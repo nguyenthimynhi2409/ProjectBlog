@@ -46,4 +46,9 @@ db.posts.hasMany(db.bookmarks, { foreignKey: "postId" });
 db.bookmarks.belongsTo(db.users);
 db.users.hasMany(db.bookmarks, { foreignKey: "userId" });
 
+db.ratings.belongsTo(db.posts);
+db.posts.hasMany(db.ratings, { foreignKey: "postId" });
+db.ratings.belongsTo(db.users);
+db.users.hasMany(db.ratings, { foreignKey: "userId" });
+
 module.exports = db;
