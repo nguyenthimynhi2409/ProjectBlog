@@ -1,8 +1,8 @@
 const PostRepository = require("../repositories/PostRepository");
 
-exports.getAll = () => PostRepository.getAll();
-exports.getById = (id) => PostRepository.getById(id);
-exports.create = (data) => PostRepository.create(data);
-exports.update = (id, data) => PostRepository.update(id, data);
-exports._delete = (id) => PostRepository.delete(id);
+exports.getAllPosts = (data) => PostRepository.getAllPosts(data);
+exports.getPostsById = (id) => PostRepository.getPostById(id);
+exports.createPost = (data) => PostRepository.createPost(data);
+exports.updatePost = (id, data) => PostRepository.updatePost(id, data);
+exports.deletePost = (id) => PostRepository.deletePost(id);
 exports.getAllPostsByUser = (id) => PostRepository.getAllPostsByUser(id);
