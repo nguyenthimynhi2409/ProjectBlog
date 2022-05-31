@@ -5,63 +5,55 @@ const sendToken = require("../utils/jwtToken");
 const cloudinary = require("cloudinary");
 
 exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {
-  userService
-    .getAllUsers()
-    .then((users) => responseData(res, 200, { users, total: users.length }))
-    .catch(next);
+  const users = await userService.getAllUsers();
+  responseData(res, 200, { users, total: users.length });
 });
 
 exports.getUser = catchAsyncErrors(async (req, res, next) => {
-  userService
-    .getUserById(req.params.id)
-    .then((user) => responseData(res, 200, user))
-    .catch(next);
+  const user = await userService.getUserById(req.params.id);
+  responseData(res, 200, user);
 });
 
+// --Admin
 exports.createUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, email, firstName, lastName, gender, phone, role } = req.body;
+  const { username, email, firstName, lastName, gender, phone, role, password } =
+    req.body;
+
   const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
     folder: "blog/ava",
     width: 150,
     crop: "scale",
   });
-  userService
-    .createUser({
-      username,
-      email,
-      firstName,
-      lastName,
-      gender,
-      phone,
-      role,
-      avatar: myCloud.secure_url,
-    })
-    .then((user) => responseData(res, 201, user))
-    .catch(next);
+
+  const user = await userService.createUser({
+    username,
+    email,
+    firstName,
+    lastName,
+    gender,
+    phone,
+    role,
+    avatar: myCloud.secure_url,
+  });
+  responseData(res, 201, user);
 });
 
 exports.updateUser = catchAsyncErrors(async (req, res, next) => {
-  userService
-    .updateUser(req.params.id, req.body)
-    .then((user) => responseData(res, 200, user))
-    .catch(next);
+  const user = await userService.updateUser(req.params.id, req.body);
+  responseData(res, 200, user);
 });
 
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
-  userService
-    .deleteUser(req.params.id)
-    .then(() => responseData(res, 200))
-    .catch(next);
+  await userService.deleteUser(req.params.id);
+  responseData(res, 200);
 });
 
-exports.login = catchAsyncErrors(async (req, res, next) => {
-  userService
-    .login(req.body)
-    .then((user) => sendToken(user, 200, res))
-    .catch(next);
+exports.signIn = catchAsyncErrors(async (req, res, next) => {
+  const user = await userService.signIn(req.body);
+  sendToken(user, 200, res);
 });
 
-exports.logout = catchAsyncErrors(async (req, res, next) => {
+exports.signOut = catchAsyncErrors(async (req, res, next) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
@@ -69,18 +61,28 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
   responseData(res, 200);
 });
 
+exports.signUp = catchAsyncErrors(async (req, res, next) => {
+  const { username, email, firstName, lastName, gender, phone, password } = req.body;
+  
+  const user = await userService.signUp({
+    username,
+    email,
+    firstName,
+    lastName,
+    gender,
+    phone,
+    password,
+  });
+  responseData(res, 201, user);
+});
+
 // User
 exports.userDetails = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.user.id);
-  userService
-    .getUserById(req.user.id)
-    .then((user) => responseData(res, 200, user))
-    .catch(next);
+  const user = await userService.getUserById(req.user.id);
+  responseData(res, 200, user);
 });
 
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
-  userService
-    .updateUser(req.user.id, req.body)
-    .then((user) => responseData(res, 200, user))
-    .catch(next);
+  const user = await userService.updateUser(req.user.id, req.body);
+  responseData(res, 200, user);
 });

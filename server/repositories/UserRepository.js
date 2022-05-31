@@ -63,7 +63,7 @@ function comparePassword(password, user) {
   return bcrypt.compare(password, user.password);
 }
 
-async function login(params) {
+async function signIn(params) {
   const username = params.username;
   const password = params.password;
   // checking if user has given password and email both
@@ -85,12 +85,31 @@ async function login(params) {
   return user;
 }
 
+async function signUp(params) {
+  // validate
+  if (await db.users.findOne({ where: { email: params.email } })) {
+    throw 'Email "' + params.email + '" is already registered';
+  }
+  let user = new db.users(params);
+  // hash password
+  user.password = await bcrypt.hashSync(params.password, 10);
+  if (user.gender == "female")
+    user.avatar =
+      "https://res.cloudinary.com/dn1b78bjj/image/upload/v1653539865/Blog/ava/female_aduxuv.png";
+  else
+    user.avatar =
+      "https://res.cloudinary.com/dn1b78bjj/image/upload/v1653539862/Blog/ava/male_efvtl4.png";
+  // save user
+  await user.save();
+  return user;
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
-  login,
+  signIn,
+  signUp
 };
-

@@ -1,7 +1,7 @@
 const CommentRepository = require("../repositories/CommentRepository");
 
-exports.getAll = () => CommentRepository.getAll();
-exports.getByPostId = (id) => CommentRepository.getByPostId(id);
-exports.create = (data) => CommentRepository.create(data);
-exports.update = (id, data) => CommentRepository.update(id, data);
-exports._delete = (id) => CommentRepository.delete(id);
+exports.getAllComments = () => CommentRepository.getAllComments();
+exports.getCommentsByPostId = (id) => CommentRepository.getCommentsByPostId(id);
+exports.createComment = (data) => CommentRepository.createComment(data);
+exports.updateComment = (id, data) => CommentRepository.updateComment(id, data);
+exports.deleteComment = (id) => CommentRepository.deleteComment(id);

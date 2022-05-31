@@ -10,19 +10,19 @@ const Post = (sequelize) => {
     },
     title: {
       allowNull: false,
-      type: DataTypes.STRING(80),
+      type: DataTypes.STRING,
     },
     content: {
       allowNull: false,
-      type: DataTypes.STRING(1000),
+      type: DataTypes.STRING,
     },
     coverImage: {
       allowNull: false,
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
     },
     status: {
       allowNull: false,
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING,
       defaultValue: "draft",
     },
     userId: {

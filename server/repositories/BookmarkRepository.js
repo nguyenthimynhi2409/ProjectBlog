@@ -1,6 +1,6 @@
 const db = require("../configs/db");
 
-async function getAll() {
+async function getAllBookmarks() {
   return await db.bookmarks.findAll();
 }
 
@@ -18,17 +18,17 @@ async function getAllBookmarksByUser(id) {
   });
 }
 
-async function getById(id) {
+async function getBookmarkById(id) {
   return await getBookmark(id);
 }
 
-async function create(params) {
+async function createBookmark(params) {
   const bookmark = new db.bookmarks(params);
   await bookmark.save();
   return bookmark;
 }
 
-async function update(id, params) {
+async function updateBookmark(id, params) {
   const bookmark = await getBookmark(id);
 
   // copy params to post and save
@@ -37,7 +37,7 @@ async function update(id, params) {
   return bookmark;
 }
 
-async function _delete(id) {
+async function deleteBookmark(id) {
   const bookmark = await getBookmark(id);
   await bookmark.destroy();
 }
@@ -49,10 +49,10 @@ async function getBookmark(id) {
 }
 
 module.exports = {
-  getAll,
-  getById,
-  create,
-  update,
-  delete: _delete,
+  getAllBookmarks,
   getAllBookmarksByUser,
+  getBookmarkById,
+  createBookmark,
+  updateBookmark,
+  deleteBookmark
 };

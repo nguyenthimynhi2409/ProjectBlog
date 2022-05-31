@@ -1,55 +1,40 @@
 const { responseData } = require("../common/responseData");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const bookmarkService = require("../services/BookmarkService");
 
-exports.getAllBookmarks = (req, res, next) => {
-  bookmarkService
-    .getAll()
-    .then((bookmarks) =>
-      responseData(res, 200, {
-        bookmarks,
-        total: bookmarks.length,
-      })
-    )
-    .catch(next);
-};
+exports.getAllBookmarks = catchAsyncErrors(async (req, res, next) => {
+  const bookmarks = await bookmarkService.getAllBookmarks();
+  responseData(res, 200, {
+    bookmarks,
+    total: bookmarks.length,
+  });
+});
 
 // Get All Bookmark by userid
-exports.getAllBookmarksByUser = (req, res, next) => {
-  bookmarkService
-    .getAllBookmarksByUser(req.params.id)
-    .then((bookmarks) =>
-      responseData(res, 200, {
-        bookmarks,
-        total: bookmarks.length,
-      })
-    )
-    .catch(next);
-};
+exports.getAllBookmarksByUser = catchAsyncErrors(async (req, res, next) => {
+  const bookmarks = await bookmarkService.getAllBookmarksByUser(req.params.id);
+  responseData(res, 200, {
+    bookmarks,
+    total: bookmarks.length,
+  });
+});
 
-exports.getBookmark = (req, res, next) => {
-  bookmarkService
-    .getById(req.params.id)
-    .then((bookmark) => responseData(res, 200, bookmark))
-    .catch(next);
-};
+exports.getBookmark = catchAsyncErrors(async (req, res, next) => {
+  const bookmark = await bookmarkService.getBookmarkById(req.params.id);
+  responseData(res, 200, bookmark);
+});
 
-exports.createBookmark = (req, res, next) => {
-  bookmarkService
-    .create(req.body)
-    .then((bookmark) => responseData(res, 201, bookmark))
-    .catch(next);
-};
+exports.createBookmark = catchAsyncErrors(async (req, res, next) => {
+  const bookmark = await bookmarkService.createBookmark(req.body);
+  responseData(res, 201, bookmark);
+});
 
-exports.updateBookmark = (req, res, next) => {
-  bookmarkService
-    .update(req.params.id, req.body)
-    .then((bookmark) => responseData(res, 200, bookmark))
-    .catch(next);
-};
+exports.updateBookmark = catchAsyncErrors(async (req, res, next) => {
+  const bookmark = await bookmarkService.updateBookmark(req.params.id, req.body);
+  responseData(res, 200, bookmark);
+});
 
-exports.deleteBookmark = (req, res, next) => {
-  bookmarkService
-    ._delete(req.params.id)
-    .then(() => responseData(res, 200))
-    .catch(next);
-};
+exports.deleteBookmark = catchAsyncErrors(async (req, res, next) => {
+  await bookmarkService.deleteBookmark(req.params.id);
+  responseData(res, 200);
+});
