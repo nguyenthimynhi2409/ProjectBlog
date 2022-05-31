@@ -1,40 +1,29 @@
 const { responseData } = require("../common/responseData");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const commentService = require("../services/CommentService");
 
-exports.getAllComments = (req, res, next) => {
-  commentService
-    .getAll()
-    .then((comments) =>
-      responseData(res, 200, { comments, total: comments.length })
-    )
-    .catch(next);
-};
+exports.getAllComments = catchAsyncErrors(async (req, res, next) => {
+  const comments = await commentService.getAllComments();
+  responseData(res, 200, { comments, total: comments.length });
+});
 
 // Get comment of a post bt postId
-exports.getCommentsByPostId = (req, res, next) => {
-  commentService
-    .getByPostId(req.params.id)
-    .then((comment) => responseData(res, 200, comment))
-    .catch(next);
-};
+exports.getCommentsByPostId = catchAsyncErrors(async (req, res, next) => {
+  const comments = await commentService.getCommentsByPostId(req.params.id);
+  responseData(res, 200, comments);
+});
 
-exports.createComment = (req, res, next) => {
-  commentService
-    .create(req.body)
-    .then((comment) => responseData(res, 201, comment))
-    .catch(next);
-};
+exports.createComment = catchAsyncErrors(async (req, res, next) => {
+  const comment = await commentService.createComment(req.body);
+  responseData(res, 201, comment);
+});
 
-exports.updateComment = (req, res, next) => {
-  commentService
-    .update(req.params.id, req.body)
-    .then((comment) => responseData(res, 200, comment))
-    .catch(next);
-};
+exports.updateComment = catchAsyncErrors(async (req, res, next) => {
+  const comment = await commentService.updateComment(req.params.id, req.body);
+  responseData(res, 200, comment);
+});
 
-exports.deleteComment = (req, res, next) => {
-  commentService
-    ._delete(req.params.id)
-    .then(() => responseData(res, 200))
-    .catch(next);
-};
+exports.deleteComment = catchAsyncErrors(async (req, res, next) => {
+  await commentService.deleteComment(req.params.id)
+  responseData(res, 200);
+});

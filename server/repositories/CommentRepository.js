@@ -1,20 +1,20 @@
 const db = require("../configs/db");
 
-async function getAll() {
+async function getAllComments() {
   return await db.comments.findAll();
 }
 
-async function getByPostId(id) {
+async function getCommentsByPostId(id) {
   return await db.comments.findAll({ where: { postId: id } });
 }
 
-async function create(params) {
+async function createComment(params) {
   const comment = new db.comments(params);
   await comment.save();
   return comment;
 }
 
-async function update(id, params) {
+async function updateComment(id, params) {
   const comment = await getComment(id);
 
   // copy params to post and save
@@ -23,7 +23,7 @@ async function update(id, params) {
   return comment;
 }
 
-async function _delete(id) {
+async function deleteComment(id) {
   const comment = await getComment(id);
   await comment.destroy();
 }
@@ -35,9 +35,9 @@ async function getComment(id) {
 }
 
 module.exports = {
-  getAll,
-  getByPostId,
-  create,
-  update,
-  delete: _delete,
+  getAllComments,
+  getCommentsByPostId,
+  createComment,
+  updateComment,
+  deleteComment,
 };
