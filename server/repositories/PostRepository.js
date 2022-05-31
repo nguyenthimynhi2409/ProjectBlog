@@ -2,20 +2,30 @@ const db = require("../configs/db");
 const { Op } = require("sequelize");
 
 async function getAllPosts(query) {
-  return await db.posts.findAll({
-    where: {
-      [Op.or]: [
-        {
-          title: {
-            [Op.like]: "%" + `${query.keyword}` + "%",
+  const keyword = "%" + `${query.keyword}` + "%";
+  console.log(keyword);
+  if (query.keyword !== undefined)
+    return await db.posts.findAll({
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: keyword,
+            },
           },
-        },
-      ],
-    },
-    include: {
-      model: db.users,
-    },
-  });
+        ],
+      },
+      include: {
+        model: db.users,
+      },
+    });
+  else {
+    return await db.posts.findAll({
+      include: {
+        model: db.users,
+      },
+    });
+  }
 }
 
 // Get all posts by userId
@@ -53,7 +63,7 @@ async function deletePost(id) {
 }
 
 async function getPost(id) {
-  const post = await db.posts.findByPk(id,{
+  const post = await db.posts.findByPk(id, {
     include: {
       model: db.users,
     },
@@ -69,5 +79,5 @@ module.exports = {
   getPostById,
   createPost,
   updatePost,
-  deletePost
+  deletePost,
 };
