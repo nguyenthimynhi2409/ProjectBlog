@@ -2,21 +2,23 @@ const config = require("./config.json");
 const mysql = require("mysql2/promise");
 const { Sequelize } = require("sequelize");
 
-module.exports = db = {};
+const { host, port, user, password, database, pool } = config.database;
 
-initialize();
+const db = {};
 
-function initialize() {
-  const { host, port, user, password, database } = config.database;
+const sequelize = new Sequelize(database, user, password, {
+  dialect: "mysql",
+  operatorsAliases: false,
+  pool: {
+    max: pool.max,
+    min: pool.min,
+    acquire: pool.acquire,
+    idle: pool.idle,
+  },
+});
 
-  // connect to db
-  const sequelize = new Sequelize(database, user, password, {
-    dialect: "mysql",
-  });
+db.sequelize = sequelize;
 
-  // init models and add them to the exported db object
-  db.users = require("../models/UserModel")(sequelize);
+db.users = require("../models/UserModel")(sequelize);
 
-  // sync all models with database
-  sequelize.sync({ alter: true });
-}
+module.exports = db;

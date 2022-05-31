@@ -5,4 +5,5 @@ exports.getUserById = (id) => UserRepository.getUserById(id);
 exports.createUser = (data) => UserRepository.createUser(data);
 exports.updateUser = (id, data) => UserRepository.updateUser(id, data);
 exports.deleteUser = (id) => UserRepository.deleteUser(id);
-exports.login = (data) => UserRepository.login(data);
+exports.signIn = (data) => UserRepository.signIn(data);
+exports.signUp = (data) => UserRepository.signUp(data);
