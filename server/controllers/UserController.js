@@ -33,6 +33,7 @@ exports.createUser = catchAsyncErrors(async (req, res, next) => {
     gender,
     phone,
     role,
+    password
     avatar: myCloud.secure_url,
   });
   responseData(res, 201, user);
@@ -63,7 +64,6 @@ exports.signOut = catchAsyncErrors(async (req, res, next) => {
 
 exports.signUp = catchAsyncErrors(async (req, res, next) => {
   const { username, email, firstName, lastName, gender, phone, password } = req.body;
-  let avatar;
   
   const user = await userService.signUp({
     username,
@@ -74,7 +74,6 @@ exports.signUp = catchAsyncErrors(async (req, res, next) => {
     phone,
     password,
   });
-  console.log(user.avatar);
   responseData(res, 201, user);
 });
 
