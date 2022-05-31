@@ -1,7 +1,7 @@
 const RatingRepository = require("../repositories/RatingRepository");
 
-exports.getAll = () => RatingRepository.getAll();
-exports.getByPostId = (id) => RatingRepository.getByPostId(id);
-exports.create = (data) => RatingRepository.create(data);
-exports.update = (id, data) => RatingRepository.update(id, data);
-exports._delete = (id) => RatingRepository.delete(id);
+exports.getAllRatings = () => RatingRepository.getAllRatings();
+exports.getRatingByPostId = (id) => RatingRepository.getRatingByPostId(id);
+exports.createRating = (data) => RatingRepository.createRating(data);
+exports.updateRating = (id, data) => RatingRepository.updateRating(id, data);
+exports.deleteRating = (id) => RatingRepository.deleteRating(id);

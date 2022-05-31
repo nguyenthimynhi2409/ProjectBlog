@@ -1,45 +1,34 @@
 const { responseData } = require("../common/responseData");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const postService = require("../services/PostService");
 
-exports.getAllPosts = (req, res, next) => {
-  postService
-    .getAll()
-    .then((posts) => responseData(res, 200, { posts, total: posts.length }))
-    .catch(next);
-};
+exports.getAllPosts = catchAsyncErrors(async (req, res, next) => {
+  const posts = await postService.getAllPosts(req.query);
+  responseData(res, 200, { posts, total: posts.length });
+});
 
 // Get all post by userId
-exports.getAllPostsByUser = (req, res, next) => {
-  postService
-    .getAllPostsByUser(req.params.id)
-    .then((posts) => responseData(res, 200, { posts, total: posts.length }))
-    .catch(next);
-};
+exports.getAllPostsByUser = catchAsyncErrors(async (req, res, next) => {
+  const posts = await postService.getAllPostsByUser(req.params.id);
+  responseData(res, 200, { posts, total: posts.length });
+});
 
-exports.getPost = (req, res, next) => {
-  postService
-    .getById(req.params.id)
-    .then((post) => responseData(res, 200, post))
-    .catch(next);
-};
+exports.getPost = catchAsyncErrors(async (req, res, next) => {
+  const post = await postService.getPostById(req.params.id);
+  responseData(res, 200, post);
+});
 
-exports.createPost = (req, res, next) => {
-  postService
-    .create(req.body)
-    .then((post) => responseData(res, 201, post))
-    .catch(next);
-};
+exports.createPost = catchAsyncErrors(async (req, res, next) => {
+  const post = await postService.createPost(req.body);
+  responseData(res, 201, post);
+});
 
-exports.updatePost = (req, res, next) => {
-  postService
-    .update(req.params.id, req.body)
-    .then((post) => responseData(res, 200, post))
-    .catch(next);
-};
+exports.updatePost = catchAsyncErrors(async (req, res, next) => {
+  const post = await postService.updatePost(req.params.id, req.body);
+  responseData(res, 200, post);
+});
 
-exports.deletePost = (req, res, next) => {
-  postService
-    ._delete(req.params.id)
-    .then(() => responseData(res, 200))
-    .catch(next);
-};
+exports.deletePost = catchAsyncErrors(async (req, res, next) => {
+  await postService.deletePost(req.params.id);
+  responseData(res, 200);
+});

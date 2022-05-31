@@ -4,6 +4,12 @@
     "port": 3306,
     "user": "root",
     "password": "12345678",
-    "database": "blog"
+    "database": "blog",
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 500,
+      "idle": 500
+    }
   }
 }

@@ -5,18 +5,19 @@ const {
   getUser,
   deleteUser,
   updateUser,
-  login,
-  logout,
   userDetails,
   updateProfile,
+  signIn,
+  signOut,
+  signUp,
 } = require("../controllers/UserController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.route("/login").post(login);
-router.route("/logout").get(logout);
-router.route("/register").post(createUser);
+router.route("/signin").post(signIn);
+router.route("/signout").get(signOut);
+router.route("/signup").post(signUp);
 
 // Admin
 router

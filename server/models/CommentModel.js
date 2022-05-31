@@ -10,7 +10,7 @@ const Commnent = (sequelize) => {
     },
     content: {
       allowNull: false,
-      type: DataTypes.STRING(256),
+      type: DataTypes.STRING,
     },
     postId: {
       allowNull: false,
