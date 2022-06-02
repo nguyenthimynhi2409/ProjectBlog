@@ -7,12 +7,7 @@ async function getAllRatings() {
 // Get rating of the post by postId
 async function getRatingByPostId(id) {
   const ratings = await db.ratings.findAll({ where: { postId: id } });
-  let sum = 0;
-  ratings.map((rating) => {
-    sum += rating.rate;
-    return sum / ratings.length;
-  });
-  return sum;
+  return ratings.reduce((a, b) => a + b.rate, 0) / ratings.length;
 }
 
 // Rate a post
