@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 5000;
 const errorMiddleware = require("./middlewares/error");
-const db = require("./configs/db");
+const db = require("./config/db");
 
 // sync all models with database
 db.sequelize.sync();

@@ -1,9 +1,10 @@
 {
-  "database": {
+  "development": {
     "host": "localhost",
     "port": 3306,
-    "user": "root",
+    "username": "root",
     "password": "12345678",
+    "dialect":"mysql",
     "database": "blog",
     "pool": {
       "max": 100,

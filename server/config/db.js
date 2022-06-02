@@ -2,11 +2,11 @@ const config = require("./config.json");
 const mysql = require("mysql2/promise");
 const { Sequelize } = require("sequelize");
 
-const { host, port, user, password, database, pool } = config.database;
+const { host, port, username, password, database, pool } = config.development;
 
 const db = {};
 
-const sequelize = new Sequelize(database, user, password, {
+const sequelize = new Sequelize(database, username, password, {
   dialect: "mysql",
   operatorsAliases: false,
   pool: {

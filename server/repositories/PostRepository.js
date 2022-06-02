@@ -1,4 +1,4 @@
-const db = require("../configs/db");
+const db = require("../config/db");
 const { Op } = require("sequelize");
 
 async function getAllPosts(query) {

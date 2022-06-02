@@ -1,4 +1,4 @@
-const db = require("../configs/db");
+const db = require("../config/db");
 
 async function getAllBookmarks() {
   return await db.bookmarks.findAll();

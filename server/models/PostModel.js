@@ -25,10 +25,15 @@ const Post = (sequelize) => {
       type: DataTypes.STRING,
       defaultValue: "draft",
     },
+    description: {
+      allowNull: false,
+      type: DataTypes.STRING,
+    },
     userId: {
       allowNull: false,
       type: DataTypes.STRING(36),
     },
   });
 };
+
 module.exports = Post;

@@ -1,4 +1,4 @@
-const db = require("../configs/db");
+const db = require("../config/db");
 
 async function getAllRatings() {
   return await db.ratings.findAll();

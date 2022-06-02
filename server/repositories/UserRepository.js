@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { responseData } = require("../common/responseData");
-const db = require("../configs/db");
+const db = require("../config/db");
 
 async function getAllUsers() {
   return await db.users.findAll();
