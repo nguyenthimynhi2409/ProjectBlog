@@ -7,17 +7,21 @@ const {
   deletePost,
   getAllPostsByUser,
 } = require("../controllers/PostController");
-const router = express.Router();
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
+const { validatePost } = require("../middlewares/validate");
 
-router.route("/posts").get(getAllPosts);
-router.route("/post/:id").put(updatePost).delete(deletePost);
-router.route("/posts/:id").get(getAllPostsByUser);
-router.post("/post/new", createPost);
+module.exports = function (app) {
+  app.route("/posts").get(catchAsyncErrors(getAllPosts));
+  app
+    .route("/post/:id")
+    .put(validatePost, catchAsyncErrors(updatePost))
+    .delete(catchAsyncErrors(deletePost));
+  app.route("/posts/:id").get(catchAsyncErrors(getAllPostsByUser));
+  app.post("/post/new", validatePost, catchAsyncErrors(createPost));
 
-// --Admin
-router
-  .route("/admin/post/:id")
-  .get(isAuthenticatedUser, authorizeRoles(2), getPost);
-
-module.exports = router;
+  // --Admin
+  app
+    .route("/admin/post/:id")
+    .get(isAuthenticatedUser, authorizeRoles(2), catchAsyncErrors(getPost));
+};

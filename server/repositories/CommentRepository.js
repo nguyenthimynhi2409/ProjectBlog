@@ -1,4 +1,4 @@
-const db = require("../configs/db");
+const db = require("../config/db");
 
 async function getAllComments() {
   return await db.comments.findAll();
