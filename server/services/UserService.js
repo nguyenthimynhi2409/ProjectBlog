@@ -1,9 +1,19 @@
 const UserRepository = require("../repositories/UserRepository");
 
-exports.getAllUsers = (data) => UserRepository.getAllUsers(data);
-exports.getUserById = (id) => UserRepository.getUserById(id);
-exports.createUser = (data) => UserRepository.createUser(data);
-exports.updateUser = (id, data) => UserRepository.updateUser(id, data);
-exports.deleteUser = (id) => UserRepository.deleteUser(id);
-exports.signIn = (data) => UserRepository.signIn(data);
-exports.signUp = (data) => UserRepository.signUp(data);
+const getAllUsers = () => UserRepository.getAllUsers();
+const getUserById = (id) => UserRepository.getUserById(id);
+const createUser = (data) => UserRepository.createUser(data);
+const updateUser = (id, data) => UserRepository.updateUser(id, data);
+const deleteUser = (id) => UserRepository.deleteUser(id);
+const forgotPassword = (data) => UserRepository.forgotPassword(data);
+const updatePassword = (id, data) => UserRepository.updatePassword(id, data);
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  forgotPassword,
+  updatePassword,
+};

@@ -1,4 +1,3 @@
-const express = require("express");
 const {
   getAllComments,
   getCommentsByPostId,
@@ -6,14 +5,14 @@ const {
   updateComment,
   deleteComment,
 } = require("../controllers/CommentController");
-const router = express.Router();
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 
-router.route("/comments").get(getAllComments);
-router
-  .route("/comment/:id")
-  .get(getCommentsByPostId)
-  .put(updateComment)
-  .delete(deleteComment);
-router.route("/comment/new").post(createComment);
-
-module.exports = router;
+module.exports = function (app) {
+  app.route("/comments").get(catchAsyncErrors(getAllComments));
+  app
+    .route("/comment/:id")
+    .get(catchAsyncErrors(getCommentsByPostId))
+    .put(catchAsyncErrors(updateComment))
+    .delete(catchAsyncErrors(deleteComment));
+  app.route("/comment/new").post(catchAsyncErrors(createComment));
+};
