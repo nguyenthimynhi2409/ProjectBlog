@@ -19,12 +19,10 @@ const sequelize = new Sequelize(database, username, password, {
 
 db.sequelize = sequelize;
 
-db.posts = require("../models/PostModel")(sequelize);
-
-// relationship
-// db.posts.belongsTo(db.users);
-// db.users.hasMany(db.posts, { foreignKey: "userId" });
 db.users = require("../models/users")(sequelize, DataTypes);
-// db.posts = require("../models/posts")(sequelize, DataTypes);
+db.posts = require("../models/posts")(sequelize, DataTypes);
+
+db.users.associate(db.posts);
+db.posts.associate(db.users);
 
 module.exports = db;

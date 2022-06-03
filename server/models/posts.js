@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 const db = require("../config/db");
 
 module.exports = (sequelize, DataTypes) => {
-  class users extends Model {
+  class posts extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,56 +11,41 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      users.hasMany(models, { foreignKey: "userId" });
-
+      posts.belongsTo(models);
     }
   }
-  users.init(
+  posts.init(
     {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.UUID,
+        type: DataTypes.UUIDV4,
         defaultValue: DataTypes.UUIDV4,
       },
-      username: {
-        allowNull: false,
-        unique: { args: true, msg: "Username already exists" },
-        type: DataTypes.STRING,
-      },
-      email: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        unique: { args: true, msg: "Email already exists" },
-      },
-      firstName: {
+      title: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      lastName: {
+      content: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      password: {
+      coverImage: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      gender: {
+      status: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: "draft",
+      },
+      description: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      phone: {
-        allowNull: true,
-        type: DataTypes.STRING,
-      },
-      role: {
+      userId: {
         allowNull: false,
-        type: DataTypes.INTEGER,
-        defaultValue: 1,
-      },
-      avatar: {
-        allowNull: true,
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(36),
       },
       deletedAt: {
         type: DataTypes.DATE,
@@ -68,8 +53,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "users",
+      modelName: "posts",
     }
   );
-  return users;
+  return posts;
 };

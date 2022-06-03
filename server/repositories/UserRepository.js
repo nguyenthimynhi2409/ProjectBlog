@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { responseData } = require("../common/responseData");
 const db = require("../config/db");
+const { getAllPostsByUser } = require("./PostRepository");
 
 async function getAllUsers() {
   return await db.users.findAll();
@@ -50,7 +51,25 @@ async function updateUser(id, params) {
 
 async function deleteUser(id) {
   const user = await getUser(id);
-  await user.destroy();
+  const posts = await getAllPostsByUser(id);
+
+
+  // If user has no post, comment, rating, bookmark => delete user
+  // Else update user (username mark to "banned", deletedAt) and delete all posts and bookmarks, comments, rating of the posts
+
+  // if (posts.length == 0) await user.destroy();
+  // else {
+    await updateUser(id, {
+      username: user.username + "-banned",
+      deletedAt: new Date(),
+    });
+    
+    // await db.posts.destroy({
+    //   where: {
+    //     id: [posts.map(post => post.id)]
+    //   }
+    // });
+  // }
 }
 
 async function getUser(id) {
@@ -81,7 +100,7 @@ async function forgotPassword(data) {
   await user.save();
   return {
     newPassword,
-    user
+    user,
   };
 }
 

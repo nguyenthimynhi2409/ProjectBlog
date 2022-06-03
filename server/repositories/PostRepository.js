@@ -1,4 +1,4 @@
-const db = require("../configs/db");
+const db = require("../config/db");
 const { Op } = require("sequelize");
 
 async function getAllPosts(query) {
@@ -59,6 +59,10 @@ async function updatePost(id, params) {
 
 async function deletePost(id) {
   const post = await getPost(id);
+  
+  // Notes: transaction
+  // Delete all ratings, comments, bookmarks of the post
+  // Then delete post
   await post.destroy();
 }
 
