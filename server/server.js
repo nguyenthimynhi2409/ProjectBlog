@@ -7,7 +7,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 5000;
 const errorMiddleware = require("./middlewares/error");
-const db = require("./configs/db");
+const db = require("./config/db");
+const route = require("./routes");
 
 // sync all models with database
 db.sequelize.sync();
@@ -25,11 +26,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
-const user = require("./routes/UserRoute");
-const post = require("./routes/PostRoute");
-
-app.use("/api", user);
-app.use("/api", post);
+route(app);
 
 app.listen(port, () => {
   console.log("Server is running on port", port);

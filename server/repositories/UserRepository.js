@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { responseData } = require("../common/responseData");
-const db = require("../configs/db");
+const db = require("../config/db");
 
 async function getAllUsers() {
   return await db.users.findAll();
@@ -24,6 +24,7 @@ async function createUser(params) {
   return user;
 }
 
+// --Admin
 async function updateUser(id, params) {
   const user = await getUser(id);
 
@@ -63,43 +64,36 @@ function comparePassword(password, user) {
   return bcrypt.compare(password, user.password);
 }
 
-async function signIn(params) {
-  const username = params.username;
-  const password = params.password;
-  // checking if user has given password and email both
-  if (!username || !password) {
-    return "Please Enter Username & Password";
-  }
-
-  const user = await db.users.findOne({ where: { username: username } });
+async function forgotPassword(data) {
+  const user = await db.users.findOne({ where: { email: data } });
 
   if (!user) {
-    return "Invalid username or password";
+    throw 'Email "' + data + '" is invalid';
   }
 
-  const isPasswordMatched = comparePassword(password, user);
-
-  if (!isPasswordMatched) {
-    return "Invalid username or password";
-  }
-  return user;
+  // send password to email
+  const newPassword = Math.floor(1000 + Math.random() * 9000).toString();
+  const hashPassword = await bcrypt.hash(newPassword, 10);
+  console.log(newPassword);
+  Object.assign(user, {
+    password: hashPassword.toString(),
+  });
+  await user.save();
+  return {
+    newPassword,
+    user
+  };
 }
 
-async function signUp(params) {
-  // validate
-  if (await db.users.findOne({ where: { email: params.email } })) {
-    throw 'Email "' + params.email + '" is already registered';
+async function updatePassword(id, data) {
+  const user = await getUser(id);
+
+  // hash password if it was entered
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
   }
-  let user = new db.users(params);
-  // hash password
-  user.password = await bcrypt.hashSync(params.password, 10);
-  if (user.gender == "female")
-    user.avatar =
-      "https://res.cloudinary.com/dn1b78bjj/image/upload/v1653539865/Blog/ava/female_aduxuv.png";
-  else
-    user.avatar =
-      "https://res.cloudinary.com/dn1b78bjj/image/upload/v1653539862/Blog/ava/male_efvtl4.png";
-  // save user
+  // copy params to user and save
+  Object.assign(user, params);
   await user.save();
   return user;
 }
@@ -110,6 +104,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  signIn,
-  signUp
+  forgotPassword,
+  updatePassword,
 };

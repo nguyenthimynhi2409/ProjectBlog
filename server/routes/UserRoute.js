@@ -1,4 +1,3 @@
-const express = require("express");
 const {
   getAllUsers,
   createUser,
@@ -7,33 +6,44 @@ const {
   updateUser,
   userDetails,
   updateProfile,
-  signIn,
-  signOut,
-  signUp,
+  forgotPassword,
+  updatePassword,
 } = require("../controllers/UserController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const { validateUser } = require("../middlewares/validate");
 
-const router = express.Router();
+module.exports = function (app) {
+  app.route("/password/forgot").post(forgotPassword);
 
-router.route("/signin").post(signIn);
-router.route("/signout").get(signOut);
-router.route("/signup").post(signUp);
+  // Admin
+  app
+    .route("/admin/users")
+    .get(isAuthenticatedUser, authorizeRoles(2), catchAsyncErrors(getAllUsers));
+  app
+    .route("/admin/user/:id")
+    .get(isAuthenticatedUser, authorizeRoles(2), catchAsyncErrors(getUser))
+    .put(isAuthenticatedUser, authorizeRoles(2), catchAsyncErrors(updateUser))
+    .delete(
+      isAuthenticatedUser,
+      authorizeRoles(2),
+      catchAsyncErrors(deleteUser)
+    );
+  app
+    .route("/admin/user/new")
+    .post(
+      isAuthenticatedUser,
+      authorizeRoles(2),
+      validateUser,
+      catchAsyncErrors(createUser)
+    );
 
-// Admin
-router
-  .route("/admin/users")
-  .get(isAuthenticatedUser, authorizeRoles(2), getAllUsers);
-router
-  .route("/admin/user/:id")
-  .get(isAuthenticatedUser, authorizeRoles(2), getUser)
-  .put(isAuthenticatedUser, authorizeRoles(2), updateUser)
-  .delete(isAuthenticatedUser, authorizeRoles(2), deleteUser);
-router
-  .route("/admin/user/new")
-  .post(isAuthenticatedUser, authorizeRoles(2), createUser);
-
-// User
-router.route("/me").get(isAuthenticatedUser, userDetails);
-router.route("/me/update").put(isAuthenticatedUser, updateProfile);
-
-module.exports = router;
+  // User
+  app.route("/me").get(isAuthenticatedUser, catchAsyncErrors(userDetails));
+  app
+    .route("/me/update")
+    .put(isAuthenticatedUser, catchAsyncErrors(updateProfile));
+  app
+    .route("/password/update")
+    .put(isAuthenticatedUser, catchAsyncErrors(updatePassword));
+};
