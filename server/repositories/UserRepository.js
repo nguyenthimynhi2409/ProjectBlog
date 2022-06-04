@@ -1,7 +1,10 @@
 const bcrypt = require("bcryptjs");
 const { responseData } = require("../common/responseData");
 const db = require("../config/db");
-const { getAllPostsByUser } = require("./PostRepository");
+const { getAllBookmarksByUser } = require("./BookmarkRepository");
+const { getCommentsByUserId } = require("./CommentRepository");
+const { getAllPostsByUser, deletePost } = require("./PostRepository");
+const { getAllRatingsByUserId } = require("./RatingRepository");
 
 async function getAllUsers() {
   return await db.users.findAll();
@@ -52,24 +55,33 @@ async function updateUser(id, params) {
 async function deleteUser(id) {
   const user = await getUser(id);
   const posts = await getAllPostsByUser(id);
-
+  const bookmarks = await getAllBookmarksByUser(id);
+  const ratings = await getAllRatingsByUserId(id);
+  const comments = await getCommentsByUserId(id);
 
   // If user has no post, comment, rating, bookmark => delete user
   // Else update user (username mark to "banned", deletedAt) and delete all posts and bookmarks, comments, rating of the posts
 
-  // if (posts.length == 0) await user.destroy();
-  // else {
+  if (
+    posts.length == 0 &&
+    bookmarks.length == 0 &&
+    ratings.length == 0 &&
+    comments.length == 0
+  )
+    await user.destroy();
+  else {
     await updateUser(id, {
       username: user.username + "-banned",
       deletedAt: new Date(),
     });
-    
+
     // await db.posts.destroy({
     //   where: {
     //     id: [posts.map(post => post.id)]
     //   }
     // });
-  // }
+    posts.map(async (post) => await deletePost(post.id));
+  }
 }
 
 async function getUser(id) {

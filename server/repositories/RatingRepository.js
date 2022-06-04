@@ -10,6 +10,17 @@ async function getRatingByPostId(id) {
   return ratings.reduce((a, b) => a + b.rate, 0) / ratings.length;
 }
 
+// Get all ratings of the post by postId
+async function getAllRatingsByPostId(id) {
+  return await db.ratings.findAll({ where: { postId: id } });
+}
+
+// Get all ratinsg that user rated
+async function getAllRatingsByUserId(id) {
+  return await db.ratings.findAll({ where: { userId: id } });
+}
+
+
 // Rate a post
 async function createRating(params) {
   const rating = new db.ratings(params);
@@ -40,6 +51,8 @@ async function getRating(id) {
 module.exports = {
   getAllRatings,
   getRatingByPostId,
+  getAllRatingsByPostId,
+  getAllRatingsByUserId,
   createRating,
   updateRating,
   deleteRating,

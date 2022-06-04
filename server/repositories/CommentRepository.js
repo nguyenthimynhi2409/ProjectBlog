@@ -8,6 +8,10 @@ async function getCommentsByPostId(id) {
   return await db.comments.findAll({ where: { postId: id } });
 }
 
+async function getCommentsByUserId(id) {
+  return await db.comments.findAll({ where: { userId: id } });
+}
+
 async function createComment(params) {
   const comment = new db.comments(params);
   await comment.save();
@@ -37,6 +41,7 @@ async function getComment(id) {
 module.exports = {
   getAllComments,
   getCommentsByPostId,
+  getCommentsByUserId,
   createComment,
   updateComment,
   deleteComment,

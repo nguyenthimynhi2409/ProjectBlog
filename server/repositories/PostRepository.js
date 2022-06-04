@@ -1,5 +1,11 @@
 const db = require("../config/db");
 const { Op } = require("sequelize");
+const { getAllBookmarksByPost } = require("./BookmarkRepository");
+const {
+  getRatingByPostId,
+  getAllRatingsByPostId,
+} = require("./RatingRepository");
+const { getCommentsByPostId } = require("./CommentRepository");
 
 async function getAllPosts(query) {
   const keyword = "%" + `${query.keyword}` + "%";
@@ -59,7 +65,28 @@ async function updatePost(id, params) {
 
 async function deletePost(id) {
   const post = await getPost(id);
-  
+  const bookmarks = await getAllBookmarksByPost(id);
+  const ratings = await getAllRatingsByPostId(id);
+  const comments = await getCommentsByPostId(id);
+
+  if (bookmarks.length !== 0)
+    await db.bookmarks.destroy({
+      where: {
+        id: [bookmarks.map((bookmark) => bookmark.id)],
+      },
+    });
+  if (ratings.length !== 0)
+    await db.ratings.destroy({
+      where: {
+        id: [ratings.map((rating) => rating.id)],
+      },
+    });
+  if (comments.length !== 0)
+    await db.comments.destroy({
+      where: {
+        id: [comments.map((comment) => comment.id)],
+      },
+    });
   // Notes: transaction
   // Delete all ratings, comments, bookmarks of the post
   // Then delete post

@@ -18,6 +18,20 @@ async function getAllBookmarksByUser(id) {
   });
 }
 
+async function getAllBookmarksByPost(id) {
+  return await db.bookmarks.findAll({
+    where: { postId: id },
+    include: [
+      {
+        model: db.users,
+      },
+      {
+        model: db.posts,
+      },
+    ],
+  });
+}
+
 async function getBookmarkById(id) {
   return await getBookmark(id);
 }
@@ -51,8 +65,9 @@ async function getBookmark(id) {
 module.exports = {
   getAllBookmarks,
   getAllBookmarksByUser,
+  getAllBookmarksByPost,
   getBookmarkById,
   createBookmark,
   updateBookmark,
-  deleteBookmark
+  deleteBookmark,
 };
