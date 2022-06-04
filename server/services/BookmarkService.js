@@ -1,8 +1,17 @@
 const BookmarkRepository = require("../repositories/BookmarkRepository");
 
-exports.getAllBookmarks = () => BookmarkRepository.getAllBookmarks();
-exports.getAllBookmarksByUser = (id) => BookmarkRepository.getAllBookmarksByUser(id); 
-exports.getBookmarkById = (id) => BookmarkRepository.getBookmarkById(id);
-exports.createBookmark = (data) => BookmarkRepository.createBookmark(data);
-exports.updateBookmark = (id, data) => BookmarkRepository.updateBookmark(id, data);
-exports.deleteBookmark = (id) => BookmarkRepository.deleteBookmark(id);
+const getAllBookmarks = () => BookmarkRepository.getAllBookmarks();
+const getAllBookmarksByUser = (id) => BookmarkRepository.getAllBookmarksByUser(id);
+const getBookmarkById = (id) => BookmarkRepository.getBookmarkById(id);
+const createBookmark = (data) => BookmarkRepository.createBookmark(data);
+const updateBookmark = (id, data) => BookmarkRepository.updateBookmark(id, data);
+const deleteBookmark = (id) => BookmarkRepository.deleteBookmark(id);
+
+module.exports = {
+  getAllBookmarks,
+  getAllBookmarksByUser,
+  getBookmarkById,
+  createBookmark,
+  updateBookmark,
+  deleteBookmark,
+};

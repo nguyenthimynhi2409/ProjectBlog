@@ -47,6 +47,9 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE,
       },
+      deletedAt: {
+        type: DataTypes.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {

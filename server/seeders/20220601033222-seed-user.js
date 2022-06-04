@@ -13,7 +13,7 @@ for (var i = 0; i < 10; i++) {
     lastName: faker.name.lastName(),
     password: bcrypt.hashSync("1234", 10),
     gender: "male",
-    phone: faker.phone.phoneNumber(),
+    phone: faker.phone.phoneNumber('0#########'),
     role: 1,
     avatar: faker.internet.avatar(),
     createdAt: new Date(),

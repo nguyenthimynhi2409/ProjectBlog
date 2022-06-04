@@ -1,7 +1,7 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
+const db = require("../config/db");
+
 module.exports = (sequelize, DataTypes) => {
   class posts extends Model {
     /**
@@ -9,20 +9,52 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate(user, comment, rating, bookmark) {
       // define association here
+      posts.belongsTo(user);
+      posts.hasMany(comment, { foreignKey: "postId" });
+      posts.hasMany(rating, { foreignKey: "postId" });
+      posts.hasMany(bookmark, { foreignKey: "postId" });
     }
   }
-  posts.init({
-    title: DataTypes.STRING,
-    content: DataTypes.STRING,
-    coverImage: DataTypes.STRING,
-    status: DataTypes.STRING,
-    description: DataTypes.STRING,
-    userId: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'posts',
-  });
+  posts.init(
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUIDV4,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      title: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      content: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      coverImage: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      status: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: "draft",
+      },
+      description: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      userId: {
+        allowNull: false,
+        type: DataTypes.STRING(36),
+      },
+    },
+    {
+      sequelize,
+      modelName: "posts",
+    }
+  );
   return posts;
 };

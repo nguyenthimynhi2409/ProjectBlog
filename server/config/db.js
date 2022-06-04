@@ -1,6 +1,6 @@
 const config = require("./config.json");
 const mysql = require("mysql2/promise");
-const { Sequelize } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 const { host, port, username, password, database, pool } = config.development;
 
@@ -19,36 +19,16 @@ const sequelize = new Sequelize(database, username, password, {
 
 db.sequelize = sequelize;
 
-db.users = require("../models/UserModel")(sequelize);
-db.posts = require("../models/PostModel")(sequelize);
-db.comments = require("../models/CommentModel")(sequelize);
-db.ratings = require("../models/RatingModel")(sequelize);
-db.bookmarks = require("../models/BookmarkModel")(sequelize);
+db.users = require("../models/users")(sequelize, DataTypes);
+db.posts = require("../models/posts")(sequelize, DataTypes);
+db.comments = require("../models/comments")(sequelize, DataTypes);
+db.ratings = require("../models/ratings")(sequelize, DataTypes);
+db.bookmarks = require("../models/bookmarks")(sequelize, DataTypes);
 
-// relationship
-db.posts.belongsTo(db.users);
-db.users.hasMany(db.posts, { foreignKey: "userId" });
-
-db.comments.belongsTo(db.posts);
-db.posts.hasMany(db.comments, { foreignKey: "postId" });
-db.comments.belongsTo(db.users);
-db.users.hasMany(db.comments, { foreignKey: "userId" });
-db.comments.belongsTo(db.comments, { as: "parent", foreignKey: "commentId" });
-db.comments.hasMany(db.comments, { as: "children", foreignKey: "commentId" });
-
-db.ratings.belongsTo(db.posts);
-db.posts.hasMany(db.ratings, { foreignKey: "postId" });
-db.ratings.belongsTo(db.users);
-db.users.hasMany(db.ratings, { foreignKey: "userId" });
-
-db.bookmarks.belongsTo(db.posts);
-db.posts.hasMany(db.bookmarks, { foreignKey: "postId" });
-db.bookmarks.belongsTo(db.users);
-db.users.hasMany(db.bookmarks, { foreignKey: "userId" });
-
-db.ratings.belongsTo(db.posts);
-db.posts.hasMany(db.ratings, { foreignKey: "postId" });
-db.ratings.belongsTo(db.users);
-db.users.hasMany(db.ratings, { foreignKey: "userId" });
+db.users.associate(db.posts, db.comments, db.ratings, db.bookmarks);
+db.posts.associate(db.users, db.comments, db.ratings, db.bookmarks);
+db.comments.associate(db.users, db.posts, db.comments);
+db.ratings.associate(db.users, db.posts);
+db.bookmarks.associate(db.users, db.posts);
 
 module.exports = db;

@@ -59,6 +59,10 @@ async function updatePost(id, params) {
 
 async function deletePost(id) {
   const post = await getPost(id);
+  
+  // Notes: transaction
+  // Delete all ratings, comments, bookmarks of the post
+  // Then delete post
   await post.destroy();
 }
 

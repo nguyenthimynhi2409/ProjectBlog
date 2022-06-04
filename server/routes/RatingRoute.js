@@ -1,4 +1,3 @@
-const express = require("express");
 const {
   getAllRatings,
   getRating,
@@ -6,14 +5,15 @@ const {
   updateRating,
   deleteRating,
 } = require("../controllers/RatingController");
-const router = express.Router();
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
+const { validateRating } = require("../middlewares/validate");
 
-router.route("/ratings").get(getAllRatings);
-router
-  .route("/rating/:id")
-  .get(getRating)
-  .put(updateRating)
-  .delete(deleteRating);
-router.route("/rating/new").post(createRating);
-
-module.exports = router;
+module.exports = function (app) {
+  app.route("/ratings").get(catchAsyncErrors(getAllRatings));
+  app
+    .route("/rating/:id")
+    .get(catchAsyncErrors(getRating))
+    .put(validateRating, catchAsyncErrors(updateRating))
+    .delete(catchAsyncErrors(deleteRating));
+  app.route("/rating/new").post(validateRating, catchAsyncErrors(createRating));
+};
