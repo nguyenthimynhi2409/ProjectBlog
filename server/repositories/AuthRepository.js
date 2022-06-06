@@ -15,10 +15,12 @@ async function signIn(params) {
     return "Please Enter Username & Password";
   }
 
-  const user = await db.users.findOne({ where: { username: username } });
+  const user = await db.users.findOne({
+    where: { username: username, deletedAt: null },
+  });
 
   if (!user) {
-    return "Invalid username or password";
+    throw new ErrorHander("Invalid username or password", 500);
   }
 
   const isPasswordMatched = comparePassword(password, user);

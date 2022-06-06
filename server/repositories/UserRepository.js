@@ -8,7 +8,7 @@ const { getAllRatingsByUserId } = require("./RatingRepository");
 
 async function getAllUsers() {
   return await db.users.findAll({
-    where: { deletedAt: null }
+    where: { deletedAt: null },
   });
 }
 
