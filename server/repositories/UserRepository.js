@@ -3,7 +3,9 @@ const { responseData } = require("../common/responseData");
 const db = require("../config/db");
 
 async function getAllUsers() {
-  return await db.users.findAll();
+  return await db.users.findAll({
+    where: { deletedAt: null },
+  });
 }
 
 async function getUserById(id) {
@@ -81,7 +83,7 @@ async function forgotPassword(data) {
   await user.save();
   return {
     newPassword,
-    user
+    user,
   };
 }
 
