@@ -58,7 +58,7 @@ async function deleteUser(id) {
   const bookmarks = await getAllBookmarksByUser(id);
   const ratings = await getAllRatingsByUserId(id);
   const comments = await getCommentsByUserId(id);
-
+  
   // If user has no post, comment, rating, bookmark => delete user
   // Else update user (username mark to "banned", deletedAt) and delete all posts and bookmarks, comments, rating of the posts
 
@@ -74,12 +74,6 @@ async function deleteUser(id) {
       username: user.username + "-banned",
       deletedAt: new Date(),
     });
-
-    // await db.posts.destroy({
-    //   where: {
-    //     id: [posts.map(post => post.id)]
-    //   }
-    // });
     posts.map(async (post) => await deletePost(post.id));
   }
 }

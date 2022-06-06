@@ -6,6 +6,7 @@ const {
   getAllRatingsByPostId,
 } = require("./RatingRepository");
 const { getCommentsByPostId } = require("./CommentRepository");
+const { sequelize } = require("../config/db");
 
 async function getAllPosts(query) {
   const keyword = "%" + `${query.keyword}` + "%";
@@ -68,29 +69,49 @@ async function deletePost(id) {
   const bookmarks = await getAllBookmarksByPost(id);
   const ratings = await getAllRatingsByPostId(id);
   const comments = await getCommentsByPostId(id);
-
-  if (bookmarks.length !== 0)
-    await db.bookmarks.destroy({
-      where: {
-        id: [bookmarks.map((bookmark) => bookmark.id)],
-      },
+  let transaction;
+  
+  try {
+    await sequelize.transaction(async (transaction) => {
+      if (bookmarks.length !== 0)
+        await db.bookmarks.destroy(
+          {
+            where: {
+              id: [bookmarks.map((bookmark) => bookmark.id)],
+            },
+          },
+          { transaction }
+        );
+      if (ratings.length !== 0)
+        await db.ratings.destroy(
+          {
+            where: {
+              id: [ratings.map((rating) => rating.id)],
+            },
+          },
+          { transaction }
+        );
+      if (comments.length !== 0)
+        await db.comments.destroy(
+          {
+            where: {
+              id: [comments.map((comment) => comment.id)],
+            },
+          },
+          { transaction }
+        );
+      // Notes: transaction
+      // Delete all ratings, comments, bookmarks of the post
+      // Then delete post
+      await post.destroy({}, { transaction });
+      await transaction.commit();
     });
-  if (ratings.length !== 0)
-    await db.ratings.destroy({
-      where: {
-        id: [ratings.map((rating) => rating.id)],
-      },
-    });
-  if (comments.length !== 0)
-    await db.comments.destroy({
-      where: {
-        id: [comments.map((comment) => comment.id)],
-      },
-    });
-  // Notes: transaction
-  // Delete all ratings, comments, bookmarks of the post
-  // Then delete post
-  await post.destroy();
+  } catch (err) {
+    console.log("error", err);
+    if (transaction) {
+      await transaction.rollback();
+    }
+  }
 }
 
 async function getPost(id) {
