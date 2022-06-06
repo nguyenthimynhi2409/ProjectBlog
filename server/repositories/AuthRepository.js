@@ -26,7 +26,7 @@ async function signIn(params) {
   const isPasswordMatched = comparePassword(password, user);
 
   if (!isPasswordMatched) {
-    return "Invalid username or password";
+    throw new ErrorHander("Invalid username or password", 500);
   }
   return user;
 }
